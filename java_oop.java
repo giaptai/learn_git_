@@ -27,7 +27,7 @@ public class java_oop {
         SupperClass a1 = new Subclass(); // up casting
         System.out.println(a1.total());
 
-        SupperClass a = new SupperClass(); // up casting
+        // SupperClass a = new SupperClass(); // up casting
         if (a1 instanceof Subclass) {
             Subclass subclass = (Subclass) a1;
             System.out.println(subclass.total(0, 0));
