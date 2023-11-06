@@ -1,0 +1,554 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
+    <script>
+        const fetchPrograms = async () => {
+            try {
+                const response = await fetch("http://localhost:8055/programs/all");
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const json = await response.json();
+                const data = json.content;
+                // data.forEach(element => {
+                //     sss.push(element);
+                // });
+                return data;
+            } catch (error) {
+                return error;
+            }
+        }
+
+        console.log()
+        let formattedTime = new Date(1860 * 1000).toISOString().substr(11, 5);
+        console.log(formattedTime)
+
+        function changeToTime(dateTime) {
+            const datetimeString = dateTime;
+            const datetime = new Date(datetimeString);
+            const options = { hour: "2-digit", minute: "2-digit" };
+            const timeString = datetime.toLocaleTimeString([], options);
+            return timeString
+        }
+
+        function changeWithoutTime(dateTime) {
+            const datetimeString = dateTime;
+            const dateParts = datetimeString.split("T")[0].split("-");
+            const formattedDateString = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+            return formattedDateString;
+        }
+
+        fetchPrograms()
+            .then(result => {
+                console.log(result)
+                const tableBody = document.getElementById("tablePrograms"); // Replace "ta
+                let count = 1;
+                result.forEach(
+                    item => {
+                        const tableRow = document.createElement("tr");
+                        tableRow.innerHTML = `
+                                        <th>${count++}</th>
+                                        <td><span>${item.channels.channelName}</span></td>
+                                        <td><span>${item.name}</span></td>
+                                        <td><span>${item.contentType}</span></td>
+                                        <td><span>${item.description}</span></td>
+                                        <td><span>${new Date(item.duration * 1000).toISOString().substr(11, 5)}</span></td>
+                                        <td><span>${new Date(item.releaseDate).getFullYear()}</span></td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                </svg></button>
+                <button type="button" class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                </svg></button>
+                                        </td>
+                                         `;
+                        tableBody.appendChild(tableRow);
+                    }
+                )
+                console.log(result);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+
+        var programs = fetch("http://localhost:8055/programs/all")
+            .then(response => response.json())
+            .catch(error => console.log(error))
+
+        // var schedules = fetch("http://localhost:8055/channels")
+        //     .then(response => response.json())
+        //     .catch(error => console.log(error))
+        // console.log(schedules);
+
+    </script>
+    <style>
+        .dropdown-menu {
+            max-height: 311px;
+            overflow-y: auto;
+            font-size: smaller;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+                <div class="position-sticky pt-3 sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-home align-text-bottom"
+                                    aria-hidden="true">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://127.0.0.1:5500/channels.html">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                    class="bi bi-broadcast-pin align-text-bottom" viewBox="0 0 16 16">
+                                    <path
+                                        d="M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707zm2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708zm5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708zm2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM6 8a2 2 0 1 1 2.5 1.937V15.5a.5.5 0 0 1-1 0V9.937A2 2 0 0 1 6 8z" />
+                                </svg>
+                                Channels
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-bar-chart-2 align-text-bottom"
+                                    aria-hidden="true">
+                                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                                </svg> -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                    class="bi bi-tv align-text-bottom" viewBox="0 0 24 24">
+                                    <path
+                                        d="M2.5 13.5A.5.5 0 0 1 3 13h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zM13.991 3l.024.001a1.46 1.46 0 0 1 .538.143.757.757 0 0 1 .302.254c.067.1.145.277.145.602v5.991l-.001.024a1.464 1.464 0 0 1-.143.538.758.758 0 0 1-.254.302c-.1.067-.277.145-.602.145H2.009l-.024-.001a1.464 1.464 0 0 1-.538-.143.758.758 0 0 1-.302-.254C1.078 10.502 1 10.325 1 10V4.009l.001-.024a1.46 1.46 0 0 1 .143-.538.758.758 0 0 1 .254-.302C1.498 3.078 1.675 3 2 3h11.991zM14 2H2C0 2 0 4 0 4v6c0 2 2 2 2 2h12c2 0 2-2 2-2V4c0-2-2-2-2-2z" />
+                                </svg>
+                                Programs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://127.0.0.1:5500/schedules.html">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-bar-chart-2 align-text-bottom"
+                                    aria-hidden="true">
+                                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                                </svg>
+                                Schedules
+                            </a>
+                        </li>
+
+                    </ul>
+
+                    <h6
+                        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                        <span>Saved reports</span>
+                        <a class="link-secondary" href="#" aria-label="Add a new report">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-plus-circle align-text-bottom"
+                                aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="16"></line>
+                                <line x1="8" y1="12" x2="16" y2="12"></line>
+                            </svg>
+                        </a>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-file-text align-text-bottom"
+                                    aria-hidden="true">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                Current month
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <nav class="bg-light px-3 pt-2 pb-2 " aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Programs</li>
+                    </ol>
+                </nav>
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Programs</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Sync</button>
+                            <!-- <button type="button" class="btn btn-sm btn-outline-secondary">Import</button> -->
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                                Import
+                            </button>
+                        </div>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea class="form-control" id="exampleFormControlTextarea1"
+                                            rows="25"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" id="syncSave">Save
+                                            changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Example single danger button -->
+
+                        <!-- <div class="btn-group me-2"> -->
+                        <!-- <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 20 20"
+                                    fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                                    stroke-linejoin="round" class="bi bi-broadcast-pin align-text-bottom">
+                                    <path
+                                        d="M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707zm2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708zm5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708zm2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM6 8a2 2 0 1 1 2.5 1.937V15.5a.5.5 0 0 1-1 0V9.937A2 2 0 0 1 6 8z" />
+                                </svg>
+                                Channels
+                            </button> -->
+                        <!-- <ul class="dropdown-menu" id="drDownChannels">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <li><a class="dropdown-item" href="#">Separated link</a></li>
+                            </ul> -->
+                        <!-- </div> -->
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Channels</span>
+                            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                                id="drDownChannels">
+                                <option selected> Channels</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                    height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg></span>
+                            <input type="text" class="form-control" placeholder="Name" id="search-name">
+                        </div>
+
+                        <!-- <div class="btn-group"> -->
+                        <!-- <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-calendar align-text-bottom"
+                                    aria-hidden="true">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                This week
+                            </button>
+                            <div class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">
+                                        <input type="date" class="form-control" name="time-start">
+                                    </a></li>
+                                <li><a class="dropdown-item" href="#"><input type="date" class="form-control"
+                                            name="time-end"></a></li>
+                                <a class="dropdown-item disabled" href="#">
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-danger btn-sm">Cancel</button>
+                                        <button type="button" class="btn btn-primary btn-sm">Filter</button>
+                                    </div>
+                                </a>
+                            </div> -->
+                    </div>
+                </div>
+                <div class="shadow-lg px-4 py-5 rounded">
+                    <div class="table-responsive-sm">
+                        <table class="table align-middle table-sm table-hover">
+                            <thead style="font-size:smaller">
+                                <tr>
+                                    <th class="col-1">#</th>
+                                    <th class="col-1">Channel</th>
+                                    <th class="col-2">Name</th>
+                                    <th class="col-1">Type</th>
+                                    <th class="col-4">Description</th>
+                                    <th class="col-1">Duration</th>
+                                    <th class="col-1">Year</th>
+                                    <th class="col-1">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablePrograms" class="table-group-divider" style="font-size: small;">
+                                <!-- <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td><span class="mdi mdi-pencil"></span>
+                                        <span class="mdi mdi-trash-can-outline"></span>
+                                    </td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+</body>
+<script>
+    // const currentDate = new Date(timeEndElements[0].value);
+    // const formattedTime = currentDate.toLocaleTimeString('vi-VN', {
+    //     year:"numeric",
+    //     month: "numeric",
+    //     day: "numeric",
+    //     hour12: true,
+    //     hour: '2-digit',
+    //     minute: '2-digit',
+    //     second: '2-digit',
+    //     fractionalSecondDigits: 2,
+    // },);
+    // const timeEndElements = document.getElementsByName('time-end');
+    // timeEndElements[0].addEventListener('click', () => {
+    //     const timeStartElements = formatDateTimeOk(document.getElementsByName('time-start')[0].value);
+    //     const timeEndElements = formatDateTimeOk(document.getElementsByName('time-end')[0].value);
+    //     console.log(timeStartElements + 'sfsf' + timeEndElements);
+
+    //     var xhttp = new XMLHttpRequest();
+    //     xhttp.onreadystatechange = function () {
+    //         if (this.readyState == 4 && this.status == 200) {
+    //             res = JSON.parse(this.response)
+    //             console.log(res[0].program_fk.title);
+    //         }
+    //     };
+    //     xhttp.open("GET", 'http://localhost:8055/schedules/date?time_start=' + timeStartElements + '&time_end=' + timeEndElements, true);
+    //     xhttp.setRequestHeader("Content-Type", "application/json");
+    //     xhttp.send();
+    // })
+    //     const timeEndElements = document.getElementsByName('filter-date');
+    //     timeEndElements[0].addEventListener('click', () => {
+    //         const timeStartElements = formatDateTimeOk(document.getElementsByName('time-start')[0].value);
+    //         const timeEndElements = formatDateTimeOk(document.getElementsByName('time-end')[0].value);
+    //         console.log(timeStartElements + 'sfsf' + timeEndElements);
+
+    //         fetch('http://localhost:8055/schedules/date?time_start=' + timeStartElements + '&time_end=' + timeEndElements, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         })
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 console.log(data[0].program_fk.title);
+    //                 let tableBody = document.getElementById("tableSchedule");
+    //                 let res = ''
+    //                 data.forEach(
+    //                     item => {
+    //                         res += `<tr>
+    //                         <th>${changeToTime(item.timeBegin)} - ${changeToTime(item.timeEnd)}</th>
+    //                         <td>
+    //                             <p class="has-text-info">${item.program_fk.title}</p>
+    //                             <p><span class="mdi mdi-calendar-range"></span> ${changeWithoutTime(item.program_fk.releaseDate)} <span class="mdi mdi-earth"></span>${item.program_fk.prodCountry}</p>
+    //                         </td>
+    //                         <td>
+    //                             ${item.program_fk.description} 
+    //                         </td>
+    //                         <td>
+    //                             <button type="button" class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+    //   <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+    //   <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+    // </svg></button>
+    // <button type="button" class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+    //   <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+    // </svg></button>
+    //                         </td></tr>
+    //                         `;
+    //                     }
+    //                 )
+    //                 console.log(res)
+    //                 tableBody.innerHTML = res
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error:', error);
+    //             });
+    //     });
+    function formatDateTimeOk(datetimene) {
+        const currentDate = new Date(datetimene);
+        const formattedDateString = `${currentDate.getFullYear()}-${String(currentDate.getUTCMonth() + 1).padStart(2, '0')}-${String(currentDate.getUTCDate()).padStart(2, '0')}T00:00:00`;
+        return formattedDateString;
+    }
+
+    // document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("exampleFormControlTextarea1").addEventListener("click", function () {
+
+        let ugly = document.getElementById("exampleFormControlTextarea1").value;
+        let obj = JSON.parse(this.value);
+        document.getElementById("exampleFormControlTextarea1").value = JSON.stringify(obj, null, 10);
+
+    })
+    // });
+    const fetchChannels = async () => {
+        try {
+            const response = await fetch("http://localhost:8055/channels/all");
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const json = await response.json();
+            let lis = document.getElementById('drDownChannels');
+            return json;
+        } catch (error) {
+            return error;
+        }
+    }
+    let lis = document.getElementById('drDownChannels');
+    console.log(lis.getElementsByTagName('li'));
+    fetchChannels()
+        .then(data => {
+            s = '<option value="all" selected> Channels</option>';
+            data.forEach(
+                item => {
+                    // s += `<li><a class="dropdown-item" href="#">${item.channelName}</a></li>`
+                    s += `<option value="${item.channelId}">${item.channelName}</option>`
+
+                })
+            lis.innerHTML = s
+        }
+        ).catch(error => { console.log(error) })
+
+    lis.addEventListener('change', (event) => {
+        console.log("http://localhost:8055/channels/" + event.target.value)
+        try {
+            const response = fetch("http://localhost:8055/channels/" + event.target.value)
+                .then(json => { return json.json() })
+                .then(data => {
+                    mData = data.programs
+                    console.log(mData)
+                    let count = 1;
+                    let s = ''
+                    if (mData.length > 0) {
+                        mData.forEach(
+                            item => {
+                                s += `<tr>
+                            <th>${count++}</th>
+                            <td><span>${item.channels.channelName}</span></td>
+                            <td><span>${item.name}</span></td>
+                            <td><span>${item.contentType}</span></td>
+                            <td><span>${item.description}</span></td>
+                            <td><span>${new Date(item.duration * 1000).toISOString().substr(11, 5)}</span></td>
+                            <td><span>${new Date(item.releaseDate).getFullYear()}</span></td>
+                            <td>
+                                <button type="button" class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                </svg></button>
+                                <button type="button" class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                </svg></button>
+                            </td></tr>`;
+                            }
+                        )
+                    } else s = `<tr><td colspan="8" class="text-center"><h4 class="m-3">No DATA !!!</h4></td></tr>`
+
+                    document.getElementById("tablePrograms").innerHTML = s
+                })
+        } catch (error) {
+            return error;
+        }
+
+    })
+
+    document.getElementById("search-name").addEventListener('input', async function (event) {
+        console.log(event.target.value)
+        await fetch('http://localhost:8055/programs/search?q=' + event.target.value)
+            .then(res => { return res.json() })
+            .then(json => {
+                let count = 1;
+                const data = json.content
+                let s = ''
+                console.log(data)
+                data.forEach(
+                    item => {
+                        s += `<tr>
+                            <th>${count++}</th>
+                            <td><span>${item.channels.channelName}</span></td>
+                            <td><span>${item.name}</span></td>
+                            <td><span>${item.contentType}</span></td>
+                            <td><span>${item.description}</span></td>
+                            <td><span>${new Date(item.duration * 1000).toISOString().substr(11, 5)}</span></td>
+                            <td><span>${new Date(item.releaseDate).getFullYear()}</span></td>
+                            <td>
+                                <button type="button" class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                </svg></button>
+                                <button type="button" class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                </svg></button>
+                            </td></tr>`;
+                    }
+                )
+                document.getElementById("tablePrograms").innerHTML = s
+            }
+            )
+            .catch(error => { console.log(error) })
+    })
+
+            // let xhttp = new XMLHttpRequest()
+        // xhttp.onreadystatechange = function () {
+        //     if (this.readyState == 4 && this.status == 200) {
+        //         console.log(this.responseText);
+        //     }
+        // }
+        // xhttp.open("GET", 'http://localhost:8055/programs/search?q=' + event.target.value, true);
+        // xhttp.setRequestHeader("Content-Type", "application/json");
+        // xhttp.send();
+</script>
+
+</html>
