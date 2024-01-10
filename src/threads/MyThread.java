@@ -1,7 +1,7 @@
 package threads;
 
 public class MyThread extends Thread {
-
+    //learn thread
     @Override
     public void start() {
         super.start();
